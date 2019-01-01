@@ -18,14 +18,14 @@ Role Variables
 
 All settable variables for this role are found in defaults/main.yml and are as follows.
 
-epops_agent = Name of the agent RPM package.
-epops_agent_SHA1 = SHA1 checksum of agent RPM package.
-epops_server = vROps server
-epops_server_port = vROps server port
-epops_server_username = vROps username with Manage Agents permissions
-epops_server_pass = Password for epops_server_username account
-epops_server_thumbprint = Certificate thumbprint of vROps
-epops_runas_root = Indicate if the EpOps agent should run as root.
+- epops_agent = Name of the agent RPM package.
+- epops_agent_SHA1 = SHA1 checksum of agent RPM package.
+- epops_server = vROps server
+- epops_server_port = vROps server port
+- epops_server_username = vROps username with Manage Agents permissions
+- epops_server_pass = Password for epops_server_username account
+- epops_server_thumbprint = Certificate thumbprint of vROps
+- epops_runas_root = Indicate if the EpOps agent should run as root.
 
 Please see defaults/main.yml for more complete descriptions and directions on configuring these variables.
 
