@@ -13,6 +13,10 @@ Requirements
 - A role created and configured inside of vROps with the Manage Agents permission assigned.
 - Guest OS which is officially compatible with the EpOps agent.
 
+Notes
+------------
+Due to unknown reasons, sometimes the initial agent setup will report server-side failures. I have built in a single retry if this occurs and success should occur on the first or second attempt. If it still fails, check logs on the agent side and vROps side. This role has been developed with and tested on vROps 7.0 and End Point Operations agent 7.0 on CentOS 7.5. While untested, it **should** work without alteration on earlier versions of vROps/EpOps as well.
+
 Role Variables
 --------------
 
