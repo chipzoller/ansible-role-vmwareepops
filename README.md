@@ -1,38 +1,54 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+This role installs and configures the End Point Operations (EpOps) agent on Linux machines and registers them with VMware vRealize Operations Manager (vROps).
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Existing vRealize Operations Manager environment online, licensed, and functional.
+- Connectivity from the managed/deployed node to the vROps cluster.
+- The EpOps RPM file downloaded and stored in the files directory within this role (or otherwise from Ansible).
+- The checksum using the SHA1 algorithm of the EpOps agent RPM file.
+- A role created and configured inside of vROps with the Manage Agents permission assigned.
+- Guest OS which is officially compatible with the EpOps agent.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+All settable variables for this role are found in defaults/main.yml and are as follows.
+
+epops_agent = Name of the agent RPM package.
+epops_agent_SHA1 = SHA1 checksum of agent RPM package.
+epops_server = vROps server
+epops_server_port = vROps server port
+epops_server_username = vROps username with Manage Agents permissions
+epops_server_pass = Password for epops_server_username account
+epops_server_thumbprint = Certificate thumbprint of vROps
+epops_runas_root = Indicate if the EpOps agent should run as root.
+
+Please see defaults/main.yml for more complete descriptions and directions on configuring these variables.
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None.
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+
 
     - hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
+         - chipzoller.vmwareepops
 
 License
 -------
 
-BSD
+MIT
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Feel free to contact me on GitHub (https://github.com/chipzoller) or Twitter (@chipzoller). All feedback is most welcome.

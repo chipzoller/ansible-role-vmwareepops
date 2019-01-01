@@ -1,9 +1,8 @@
 ---
 # Configure all variables in this file.
-#
-#
 ########################################
 ########################################
+
 #Name of the agent RPM package. tar.gz files not yet supported. Must be quoted
 epops_agent: 'vRealize-Endpoint-Operations-Management-Agent-x86-64-linux-7.0.0-9957520.rpm'
 
