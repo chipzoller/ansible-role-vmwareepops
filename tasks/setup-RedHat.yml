@@ -1,0 +1,74 @@
+---
+- name: Existing agent check
+  file:
+    path: /opt/vmware/epops-agent/bin/ep-agent.sh
+    state: file
+  register: agent_check
+  ignore_errors: yes
+
+- name: Is installed
+  debug:
+    msg: Agent is not installed. Will continue with installation.
+  when: agent_check is failed
+- name: Begin EpOps agent installation process.
+
+  block:
+    - name: Copy agent locally
+      copy:
+        src: roles/epops/files/{{ epops_agent }}
+        dest: /tmp/epops.rpm
+        checksum: "{{epops_agent_SHA1}}"
+
+    - name: Install RPM package
+      yum:
+        name: /tmp/epops.rpm
+        state: present
+
+    - name: Set up agent.properties file
+      lineinfile:
+        line: "{{ item }}"
+        path: /opt/vmware/epops-agent/conf/agent.properties
+        state: present
+      with_items:
+        - 'agent.setup.serverIP={{ epops_server }}'
+        - 'agent.setup.serverSSLPort={{ epops_server_port }}'
+        - 'agent.setup.serverLogin={{ epops_server_username }}'
+        - 'agent.setup.serverPword={{ epops_server_pass }}'
+        - 'agent.setup.serverCertificateThumbprint={{ epops_server_thumbprint }}'
+
+    - name: Run agent as root
+      replace:
+        path:  /etc/init.d/epops-agent
+        regexp: 'RUN_AS_USER=epops'
+        replace: 'RUN_AS_USER=root'
+      when: epops_runas_root == true
+
+    - name: Start agent setup
+      command: '/opt/vmware/epops-agent/bin/ep-agent.sh setup'
+      register: start_agent
+      changed_when: false
+      failed_when: "'The agent has been successfully registered' not in start_agent.stdout" 
+
+    # - name: Show output
+    #   debug:
+    #     var: start_agent
+
+  when: agent_check is failed
+
+  rescue:
+    - pause:
+        seconds: 5
+    - name: Attempt to run agent setup a second time.
+      command: '/opt/vmware/epops-agent/bin/ep-agent.sh setup'
+      register: start_agent
+      changed_when: false
+      failed_when: "'The agent has been successfully registered' not in start_agent.stdout"
+
+  always:
+    - name: Check running agent status
+      command: '/opt/vmware/epops-agent/bin/ep-agent.sh status'
+      register: agent_status
+      changed_when: false
+    - name: Show output of status.
+      debug:
+        var: agent_status.stdout
