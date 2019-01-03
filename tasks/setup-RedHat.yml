@@ -40,6 +40,7 @@
         - 'agent.setup.serverLogin={{ epops_server_username }}'
         - 'agent.setup.serverPword={{ epops_server_pass }}'
         - 'agent.setup.serverCertificateThumbprint={{ epops_server_thumbprint }}'
+      no_log: true
 
     - name: Run agent as root
       replace:
