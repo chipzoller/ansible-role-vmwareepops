@@ -6,12 +6,17 @@
   register: agent_check
   ignore_errors: yes
 
-- name: Is installed
+- name: Agent not installed.
   debug:
     msg: Agent is not installed. Will continue with installation.
   when: agent_check is failed
-- name: Begin EpOps agent installation process.
 
+- name: Agent is installed.
+  debug:
+    msg: Agent is already installed. Will not continue with installation.
+  when: agent_check is success
+
+- name: Begin EpOps agent installation process.
   block:
     - name: Copy agent locally
       copy:
@@ -47,7 +52,8 @@
       command: '/opt/vmware/epops-agent/bin/ep-agent.sh setup'
       register: start_agent
       changed_when: false
-      failed_when: "'The agent has been successfully registered' not in start_agent.stdout" 
+      until: "'The agent has been successfully registered' in start_agent.stdout"
+      retries: 2
 
     # - name: Show output
     #   debug:
@@ -55,20 +61,12 @@
 
   when: agent_check is failed
 
-  rescue:
-    - pause:
-        seconds: 5
-    - name: Attempt to run agent setup a second time.
-      command: '/opt/vmware/epops-agent/bin/ep-agent.sh setup'
-      register: start_agent
-      changed_when: false
-      failed_when: "'The agent has been successfully registered' not in start_agent.stdout"
-
   always:
     - name: Check running agent status
       command: '/opt/vmware/epops-agent/bin/ep-agent.sh status'
       register: agent_status
       changed_when: false
+
     - name: Show output of status.
       debug:
         var: agent_status.stdout
