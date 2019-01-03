@@ -45,7 +45,7 @@ Example Playbook
 
     - hosts: servers
       roles:
-         - chipzoller.vmwareepops
+         - chipzoller.vmware_epops
 
 License
 -------
