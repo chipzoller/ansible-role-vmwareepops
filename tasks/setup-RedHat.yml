@@ -22,7 +22,7 @@
       copy:
         src: roles/epops/files/{{ epops_agent }}
         dest: /tmp/epops.rpm
-        checksum: "{{epops_agent_SHA1}}"
+        checksum: "{{ epops_agent_SHA1 }}"
 
     - name: Install RPM package
       yum:
